@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  repository_dispatch:
+    types: [run_build]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: pspdev/pspsdk:latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: |
+        apk add build-base make
+
+    - name: Compile PKGConf
+      run: |
+        make clean
+        make -j $(getconf _NPROCESSORS_ONLN)
+        make install
