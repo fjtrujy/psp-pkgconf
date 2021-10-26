@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  repository_dispatch:
+    types: [run_build]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: ghcr.io/fjtrujy/pspsdk:latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: |
+        apk add kyua atf build-base autoconf automake libtool xz gzip
+
+    - name: Compile PKGConf
+      run: |
+        ./build-psp.sh
+        
